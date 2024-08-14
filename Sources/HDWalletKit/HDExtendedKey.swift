@@ -1,6 +1,6 @@
 import Foundation
-import HsCryptoKit
-import HsExtensions
+import WWCryptoKit
+import WWExtensions
 
 public enum HDExtendedKey {
     static let length = 82
@@ -70,7 +70,7 @@ public extension HDExtendedKey {
 public extension HDExtendedKey {
 
     static func version(extendedKey: Data) throws -> HDExtendedKeyVersion {
-        let version = extendedKey.prefix(4).hs.to(type: UInt32.self).bigEndian
+        let version = extendedKey.prefix(4).ww.to(type: UInt32.self).bigEndian
         guard let keyType = HDExtendedKeyVersion(rawValue: version) else {
             throw ParsingError.wrongVersion
         }

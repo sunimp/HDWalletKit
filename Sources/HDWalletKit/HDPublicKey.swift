@@ -1,5 +1,5 @@
 import Foundation
-import HsCryptoKit
+import WWCryptoKit
 import secp256k1
 
 public class HDPublicKey: HDKey {}
@@ -25,7 +25,7 @@ public extension HDPublicKey {
         let derivedChainCode = digest[32..<64]
 
         let hash = Crypto.ripeMd160Sha256(raw)
-        let fingerprint = hash[0..<4].hs.to(type: UInt32.self)
+        let fingerprint = hash[0..<4].ww.to(type: UInt32.self)
 
         let context = secp256k1_context_create(UInt32(SECP256K1_CONTEXT_SIGN|SECP256K1_CONTEXT_VERIFY))!
 

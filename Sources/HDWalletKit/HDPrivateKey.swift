@@ -1,7 +1,7 @@
 import Crypto
 import Foundation
-import HsCryptoKit
-import HsExtensions
+import WWCryptoKit
+import WWExtensions
 import secp256k1
 
 public class HDPrivateKey: HDKey {
@@ -78,7 +78,7 @@ public extension HDPrivateKey {
         let derivedChainCode = digest[32 ..< 64]
 
         let hash = Crypto.ripeMd160Sha256(publicKey)
-        let fingerprint: UInt32 = hash[0 ..< 4].hs.to(type: UInt32.self)
+        let fingerprint: UInt32 = hash[0 ..< 4].ww.to(type: UInt32.self)
 
         return HDPrivateKey(
             privateKey: derivedPrivateKey,

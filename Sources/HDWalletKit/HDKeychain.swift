@@ -1,6 +1,6 @@
 import Foundation
-import HsExtensions
-import HsCryptoKit
+import WWExtensions
+import WWCryptoKit
 
 public final class HDKeychain {
     let privateKey: HDPrivateKey

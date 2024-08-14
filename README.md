@@ -1,4 +1,4 @@
-# HdWalletKit.Swift
+# HDWalletKit.Swift
 
 HD Wallet library that makes possible generating and validating mnemonic phrases. Also it can generates public / private keys for HD keychain.
 
@@ -9,18 +9,18 @@ HD Wallet library that makes possible generating and validating mnemonic phrases
 ### Swift Package Manager
 
 The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code
-and is integrated into the `swift` compiler. It is in early development, but HdWalletKit does support its use on
+and is integrated into the `swift` compiler. It is in early development, but HDWalletKit does support its use on
 supported platforms.
 
-Once you have your Swift package set up, adding HdWalletKit as a dependency is as easy as adding it to
+Once you have your Swift package set up, adding HDWalletKit as a dependency is as easy as adding it to
 the `dependencies` value of your `Package.swift`.
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/horizontalsystems/HdWalletKit.Swift.git", .upToNextMajor(from: "1.0.0"))
+    .package(url: "https://github.com/horizontalsystems/HDWalletKit.Swift.git", .upToNextMajor(from: "1.0.0"))
 ]
 ```
 
 ## License
 
-HdWalletKit is available under the MIT license. See the LICENSE file for more info.
+HDWalletKit is available under the MIT license. See the LICENSE file for more info.

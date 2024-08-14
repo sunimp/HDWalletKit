@@ -1,5 +1,5 @@
 import XCTest
-import HdWalletKit
+import HDWalletKit
 
 class HDWalletKitTests: XCTestCase {
 

@@ -1,4 +1,4 @@
-import HsExtensions
+import WWExtensions
 
 // https://github.com/satoshilabs/slips/blob/master/slip-0132.md
 public enum HDExtendedKeyVersion: UInt32, CaseIterable {

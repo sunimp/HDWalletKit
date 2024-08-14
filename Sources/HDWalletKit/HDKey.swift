@@ -1,5 +1,5 @@
 import Foundation
-import HsCryptoKit
+import WWCryptoKit
 
 public class HDKey {
     public let version: UInt32
@@ -23,11 +23,11 @@ public class HDKey {
 
     public init(extendedKey: Data) throws {
         try HDExtendedKey.isValid(extendedKey)
-        version = extendedKey.prefix(4).hs.to(type: UInt32.self).bigEndian
+        version = extendedKey.prefix(4).ww.to(type: UInt32.self).bigEndian
 
         depth = extendedKey[4]
-        fingerprint = extendedKey[5..<9].hs.to(type: UInt32.self).bigEndian
-        childIndex = extendedKey[9..<12].hs.to(type: UInt32.self).bigEndian
+        fingerprint = extendedKey[5..<9].ww.to(type: UInt32.self).bigEndian
+        childIndex = extendedKey[9..<12].ww.to(type: UInt32.self).bigEndian
         chainCode = extendedKey[13..<45]
         _raw = extendedKey[45..<78]
     }
@@ -58,7 +58,7 @@ public extension HDKey {
     }
 
     var description: String {
-        "\(raw.hs.hex) ::: \(chainCode.hs.hex) ::: depth: \(depth) - fingerprint: \(fingerprint) - childIndex: \(childIndex)"
+        "\(raw.ww.hex) ::: \(chainCode.ww.hex) ::: depth: \(depth) - fingerprint: \(fingerprint) - childIndex: \(childIndex)"
     }
 
 }
