@@ -15,7 +15,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/apple/swift-crypto.git", "1.0.0" ..< "3.0.0"),
         .package(url: "https://github.com/GigaBitcoin/secp256k1.swift.git", .upToNextMajor(from: "0.17.0")),
-        .package(url: "https://github.com/sunimp/WWCryptoKit.Swift.git", .upToNextMajor(from: "1.3.1")),
+        .package(url: "https://github.com/sunimp/WWCryptoKit.Swift.git", .upToNextMajor(from: "1.3.2"))
     ],
     targets: [
         .target(
