@@ -1,3 +1,12 @@
+//
+//  HDExtendedKeyVersion.swift
+//  HDWalletKit
+//
+//  Created by Sun on 2024/8/21.
+//
+
+import Foundation
+
 import WWExtensions
 
 // https://github.com/satoshilabs/slips/blob/master/slip-0132.md

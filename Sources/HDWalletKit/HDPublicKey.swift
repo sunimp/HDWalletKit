@@ -1,4 +1,12 @@
+//
+//  HDPublicKey.swift
+//  HDWalletKit
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
+
 import WWCryptoKit
 import secp256k1
 
@@ -82,5 +90,4 @@ public extension HDPublicKey {
                 childIndex: derivingIndex
         )
     }
-
 }

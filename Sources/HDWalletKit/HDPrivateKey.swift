@@ -1,5 +1,13 @@
-import Crypto
+//
+//  HDPrivateKey.swift
+//  HDWalletKit
+//
+//  Created by Sun on 2024/8/21.
+//
+
 import Foundation
+
+import Crypto
 import WWCryptoKit
 import WWExtensions
 import secp256k1
