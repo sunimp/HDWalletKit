@@ -29,8 +29,8 @@ extension String {
         var data = Data(capacity: count)
 
         for i in 0 ..< count / length {
-            let startIDx = index(startIndex, offsetBy: i * length)
-            let subArray = self[startIDx ..< index(startIDx, offsetBy: length)]
+            let startIdx = index(startIndex, offsetBy: i * length)
+            let subArray = self[startIdx ..< index(startIdx, offsetBy: length)]
             let subString = String(subArray)
             guard let byte = UInt8(subString, radix: 2) else {
                 return nil

@@ -107,6 +107,7 @@ public enum Mnemonic {
 
     private static func seedBits(words: [String], list: [String]) throws -> String {
         var seedBits = ""
+        // swiftformat:disable unusedArguments
         try words.enumerated().forEach { index, word in
             guard let index = list.firstIndex(of: word) else {
                 throw ValidationError.invalidWord(index: index)
@@ -116,6 +117,7 @@ public enum Mnemonic {
 
             seedBits.append(contentsOf: binaryString)
         }
+        // swiftformat:enable unusedArguments
         return seedBits
     }
 
