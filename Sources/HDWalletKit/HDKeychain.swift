@@ -7,8 +7,8 @@
 
 import Foundation
 
-import WWExtensions
 import WWCryptoKit
+import WWExtensions
 
 public final class HDKeychain {
     let privateKey: HDPrivateKey
@@ -68,7 +68,7 @@ public final class HDKeychain {
     }
 
     func derivedNonHardenedPublicKeys(path: String, indices: Range<UInt32>) throws -> [HDPublicKey] {
-        guard indices.count > 0 else {
+        guard !indices.isEmpty else {
             return []
         }
 

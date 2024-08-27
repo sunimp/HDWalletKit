@@ -10,6 +10,8 @@ import Foundation
 import WWCryptoKit
 import WWExtensions
 
+// MARK: - HDExtendedKey
+
 public enum HDExtendedKey {
     static let length = 82
 
@@ -21,7 +23,7 @@ public enum HDExtendedKey {
         try self.init(data: data)
     }
 
-    public init(data: Data, curve: DerivationCurve = .secp256k1) throws  {
+    public init(data: Data, curve _: DerivationCurve = .secp256k1) throws {
         guard data.count == HDExtendedKey.length else {
             throw ParsingError.wrongKeyLength
         }
@@ -42,42 +44,42 @@ public enum HDExtendedKey {
 
     var hdKey: HDKey {
         switch self {
-        case .private(let key): return key
-        case .public(let key): return key
+        case .private(let key): key
+        case .public(let key): key
         }
     }
 
 }
 
-public extension HDExtendedKey {
+extension HDExtendedKey {
 
-    var derivedType: DerivedType {
+    public var derivedType: DerivedType {
         DerivedType(depth: hdKey.depth)
     }
 
-    var purposes: [Purpose] {
+    public var purposes: [Purpose] {
         let version = HDExtendedKeyVersion(rawValue: hdKey.version) ?? .xprv
         return version.purposes
     }
 
-    var coinTypes: [HDExtendedKeyVersion.ExtendedKeyCoinType] {
+    public var coinTypes: [HDExtendedKeyVersion.ExtendedKeyCoinType] {
         let version = HDExtendedKeyVersion(rawValue: hdKey.version) ?? .xprv
         return version.coinTypes
     }
 
-    var serialized: Data {
+    public var serialized: Data {
         hdKey.data()
     }
 
-    static func deserialize(data: Data) throws -> HDExtendedKey {
+    public static func deserialize(data: Data) throws -> HDExtendedKey {
         try HDExtendedKey(data: data)
     }
 
 }
 
-public extension HDExtendedKey {
+extension HDExtendedKey {
 
-    static func version(extendedKey: Data) throws -> HDExtendedKeyVersion {
+    public static func version(extendedKey: Data) throws -> HDExtendedKeyVersion {
         let version = extendedKey.prefix(4).ww.to(type: UInt32.self).bigEndian
         guard let keyType = HDExtendedKeyVersion(rawValue: version) else {
             throw ParsingError.wrongVersion
@@ -86,17 +88,17 @@ public extension HDExtendedKey {
         return keyType
     }
 
-    static func isValid(_ extendedKey: Data, isPublic: Bool? = nil) throws {
+    public static func isValid(_ extendedKey: Data, isPublic: Bool? = nil) throws {
         guard extendedKey.count == HDExtendedKey.length else {
             throw ParsingError.wrongKeyLength
         }
 
         let version = try version(extendedKey: extendedKey)
-        if let isPublic = isPublic, version.isPublic != isPublic  {
+        if let isPublic, version.isPublic != isPublic {
             throw ParsingError.wrongVersion
         }
 
-        let checksum: Data = extendedKey[78..<82]
+        let checksum: Data = extendedKey[78 ..< 82]
         guard Data(Crypto.doubleSha256(extendedKey.prefix(78)).prefix(4)) == checksum else {
             throw ParsingError.invalidChecksum
         }
@@ -104,22 +106,24 @@ public extension HDExtendedKey {
 
 }
 
+// MARK: Equatable, Hashable
+
 extension HDExtendedKey: Equatable, Hashable {
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(serialized)
     }
 
-    public static func ==(lhs: HDExtendedKey, rhs: HDExtendedKey) -> Bool {
+    public static func == (lhs: HDExtendedKey, rhs: HDExtendedKey) -> Bool {
         lhs.serialized == rhs.serialized
     }
 
 }
 
-public extension HDExtendedKey {
+extension HDExtendedKey {
 
-    //master key depth == 0, account depth = "m/purpose'/coin_type'/account'" = 3, all others is custom
-    enum DerivedType {
+    /// master key depth == 0, account depth = "m/purpose'/coin_type'/account'" = 3, all others is custom
+    public enum DerivedType {
         case bip32
         case master
         case account
@@ -133,7 +137,7 @@ public extension HDExtendedKey {
         }
     }
 
-    enum ParsingError: Error {
+    public enum ParsingError: Error {
         case wrongVersion
         case wrongType
         case wrongKeyLength

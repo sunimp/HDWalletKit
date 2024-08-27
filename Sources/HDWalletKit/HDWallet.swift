@@ -48,10 +48,13 @@ public class HDWallet {
     }
 
     public func publicKeys(account: Int, indices: Range<UInt32>, chain: Chain) throws -> [HDPublicKey] {
-        try keychain.derivedNonHardenedPublicKeys(path: "m/\(purpose)'/\(coinType)'/\(account)'/\(chain.rawValue)", indices: indices)
+        try keychain.derivedNonHardenedPublicKeys(
+            path: "m/\(purpose)'/\(coinType)'/\(account)'/\(chain.rawValue)",
+            indices: indices
+        )
     }
 
-    public enum Chain : Int {
+    public enum Chain: Int {
         case external
         case `internal`
     }

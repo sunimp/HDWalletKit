@@ -14,7 +14,7 @@ extension String {
     func pad(toSize: Int) -> String {
         guard count < toSize else { return self }
         var padded = self
-        for _ in 0..<(toSize - count) {
+        for _ in 0 ..< (toSize - count) {
             padded = "0" + padded
         }
         return padded
@@ -29,8 +29,8 @@ extension String {
         var data = Data(capacity: count)
 
         for i in 0 ..< count / length {
-            let startIdx = self.index(startIndex, offsetBy: i * length)
-            let subArray = self[startIdx ..< self.index(startIdx, offsetBy: length)]
+            let startIDx = index(startIndex, offsetBy: i * length)
+            let subArray = self[startIDx ..< index(startIDx, offsetBy: length)]
             let subString = String(subArray)
             guard let byte = UInt8(subString, radix: 2) else {
                 return nil

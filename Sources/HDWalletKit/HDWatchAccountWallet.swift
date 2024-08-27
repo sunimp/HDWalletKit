@@ -24,7 +24,7 @@ public class HDWatchAccountWallet {
             return []
         }
 
-        if (0x80000000 & firstIndex) != 0 && (0x80000000 & lastIndex) != 0 {
+        if (0x80000000 & firstIndex) != 0, (0x80000000 & lastIndex) != 0 {
             throw DerivationError.invalidChildIndex
         }
 
@@ -38,7 +38,7 @@ public class HDWatchAccountWallet {
         return keys
     }
 
-    public enum Chain : Int {
+    public enum Chain: Int {
         case external
         case `internal`
     }

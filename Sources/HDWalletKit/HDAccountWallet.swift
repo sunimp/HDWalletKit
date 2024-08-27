@@ -45,7 +45,7 @@ public class HDAccountWallet {
         }
     }
 
-    public enum Chain : Int {
+    public enum Chain: Int {
         case external
         case `internal`
     }

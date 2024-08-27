@@ -9,7 +9,7 @@ import Foundation
 
 import WWCryptoKit
 
-public struct Mnemonic {
+public enum Mnemonic {
 
     public enum WordCount: Int, CaseIterable {
         case twelve = 12
@@ -19,11 +19,11 @@ public struct Mnemonic {
         case twentyFour = 24
 
         var bitLength: Int {
-            self.rawValue / 3 * 32
+            rawValue / 3 * 32
         }
 
         var checksumLength: Int {
-            self.rawValue / 3
+            rawValue / 3
         }
 
     }
@@ -47,7 +47,7 @@ public struct Mnemonic {
         case invalidChecksum
     }
 
-    enum MnemonicError : Error {
+    enum MnemonicError: Error {
         case randomBytesError
     }
 
@@ -63,27 +63,35 @@ public struct Mnemonic {
         return generate(entropy: bytes, language: language)
     }
 
-    private static func generate(entropy : Data, language: Language = .english) -> [String] {
+    private static func generate(entropy: Data, language: Language = .english) -> [String] {
         let list = wordList(for: language)
-        var bin = String(entropy.flatMap { ("00000000" + String($0, radix:2)).suffix(8) })
+        var bin = String(entropy.flatMap { ("00000000" + String($0, radix: 2)).suffix(8) })
 
         let hash = Crypto.sha256(entropy)
         let bits = entropy.count * 8
         let cs = bits / 32
 
-        let hashbits = String(hash.flatMap { ("00000000" + String($0, radix:2)).suffix(8) })
+        let hashbits = String(hash.flatMap { ("00000000" + String($0, radix: 2)).suffix(8) })
         let checksum = String(hashbits.prefix(cs))
         bin += checksum
 
         var mnemonic = [String]()
-        for i in 0..<(bin.count / 11) {
-            let wi = Int(bin[bin.index(bin.startIndex, offsetBy: i * 11)..<bin.index(bin.startIndex, offsetBy: (i + 1) * 11)], radix: 2)!
+        for i in 0 ..< (bin.count / 11) {
+            let wi = Int(
+                bin[bin.index(bin.startIndex, offsetBy: i * 11) ..< bin.index(bin.startIndex, offsetBy: (i + 1) * 11)],
+                radix: 2
+            )!
             mnemonic.append(String(list[wi]))
         }
         return mnemonic
     }
 
-    public static func seed(mnemonic m: [String], prefix: String = "mnemonic", passphrase: String = "", iterations: Int = 2048) -> Data? {
+    public static func seed(
+        mnemonic m: [String],
+        prefix: String = "mnemonic",
+        passphrase: String = "",
+        iterations: Int = 2048
+    ) -> Data? {
         let mnemonic = m.joined(separator: " ").decomposedStringWithCompatibilityMapping
         let salt = (prefix + passphrase).decomposedStringWithCompatibilityMapping.data(using: .utf8)!
         let seed = Crypto.deriveKey(password: mnemonic, salt: salt, iterations: iterations, keyLength: 64)
@@ -99,7 +107,7 @@ public struct Mnemonic {
 
     private static func seedBits(words: [String], list: [String]) throws -> String {
         var seedBits = ""
-        try words.enumerated().forEach { (index, word) in
+        try words.enumerated().forEach { index, word in
             guard let index = list.firstIndex(of: word) else {
                 throw ValidationError.invalidWord(index: index)
             }
@@ -112,13 +120,13 @@ public struct Mnemonic {
     }
 
     private static func seedBitsForLanguage(words: [String]) throws -> String {
-        var wrongWordIndex: Int = 0
+        var wrongWordIndex = 0
 
         for language in (Language.allCases.map { wordList(for: $0).map(String.init) }) {
             do {
                 return try seedBits(words: words, list: language)
             } catch {
-                if case let ValidationError.invalidWord(index) = error {
+                if case ValidationError.invalidWord(let index) = error {
                     wrongWordIndex = wrongWordIndex < index ? index : wrongWordIndex
                 }
             }
@@ -163,25 +171,25 @@ public struct Mnemonic {
     public static func wordList(for language: Language) -> [String.SubSequence] {
         switch language {
         case .english:
-            return WordList.english
+            WordList.english
         case .japanese:
-            return WordList.japanese
+            WordList.japanese
         case .korean:
-            return WordList.korean
+            WordList.korean
         case .spanish:
-            return WordList.spanish
+            WordList.spanish
         case .simplifiedChinese:
-            return WordList.simplifiedChinese
+            WordList.simplifiedChinese
         case .traditionalChinese:
-            return WordList.traditionalChinese
+            WordList.traditionalChinese
         case .french:
-            return WordList.french
+            WordList.french
         case .italian:
-            return WordList.italian
+            WordList.italian
         case .czech:
-            return WordList.czech
+            WordList.czech
         case .portuguese:
-            return WordList.portuguese
+            WordList.portuguese
         }
     }
 
@@ -190,7 +198,7 @@ public struct Mnemonic {
             do {
                 _ = try seedBits(words: words, list: wordList(for: language).map(String.init))
                 return language
-            } catch {}
+            } catch { }
         }
 
         return nil

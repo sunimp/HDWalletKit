@@ -9,7 +9,9 @@ import Foundation
 
 import WWExtensions
 
-// https://github.com/satoshilabs/slips/blob/master/slip-0132.md
+// MARK: - HDExtendedKeyVersion
+
+/// https://github.com/satoshilabs/slips/blob/master/slip-0132.md
 public enum HDExtendedKeyVersion: UInt32, CaseIterable {
     case xprv = 0x0488ade4
     case xpub = 0x0488b21e
@@ -29,13 +31,16 @@ public enum HDExtendedKeyVersion: UInt32, CaseIterable {
             case .bitcoin: self = isPrivate ? .xprv : .xpub
             case .litecoin: self = isPrivate ? .Ltpv : .Ltub
             }
+
         case .bip49:
             switch coinType {
             case .bitcoin: self = isPrivate ? .yprv : .ypub
             case .litecoin: self = isPrivate ? .Mtpv : .Mtub
             }
+
         case .bip84:
             self = isPrivate ? .zprv : .zpub
+
         case .bip86:
             self = isPrivate ? .xprv : .xpub
         }
@@ -51,55 +56,57 @@ public enum HDExtendedKeyVersion: UInt32, CaseIterable {
 
     public var string: String {
         switch self {
-        case .xprv: return "xprv"
-        case .xpub: return "xpub"
-        case .yprv: return "yprv"
-        case .ypub: return "ypub"
-        case .zprv: return "zprv"
-        case .zpub: return "zpub"
-        case .Ltpv: return "Ltpv"
-        case .Ltub: return "Ltub"
-        case .Mtpv: return "Mtpv"
-        case .Mtub: return "Mtub"
+        case .xprv: "xprv"
+        case .xpub: "xpub"
+        case .yprv: "yprv"
+        case .ypub: "ypub"
+        case .zprv: "zprv"
+        case .zpub: "zpub"
+        case .Ltpv: "Ltpv"
+        case .Ltub: "Ltub"
+        case .Mtpv: "Mtpv"
+        case .Mtub: "Mtub"
         }
     }
 
     public var purposes: [Purpose] {
         switch self {
-        case .xprv, .xpub: return [.bip44, .bip86]
-        case .Ltpv, .Ltub: return [.bip44]
-        case .yprv, .ypub, .Mtpv, .Mtub: return [.bip49]
-        case .zprv, .zpub: return [.bip84]
+        case .xprv, .xpub: [.bip44, .bip86]
+        case .Ltpv, .Ltub: [.bip44]
+        case .yprv, .ypub, .Mtpv, .Mtub: [.bip49]
+        case .zprv, .zpub: [.bip84]
         }
     }
 
     public var coinTypes: [ExtendedKeyCoinType] {
         switch self {
-        case .xprv, .xpub, .zprv, .zpub: return [.bitcoin, .litecoin]
-        case .yprv, .ypub: return [.bitcoin]
-        case .Ltpv, .Ltub, .Mtpv, .Mtub: return [.litecoin]
+        case .xprv, .xpub, .zprv, .zpub: [.bitcoin, .litecoin]
+        case .yprv, .ypub: [.bitcoin]
+        case .Ltpv, .Ltub, .Mtpv, .Mtub: [.litecoin]
         }
     }
 
     public var pubKey: Self {
         switch self {
-        case .xprv: return .xpub
-        case .yprv: return .ypub
-        case .zprv: return .zpub
-        case .Ltpv: return .Ltub
-        case .Mtpv: return .Mtub
-        default: return self
+        case .xprv: .xpub
+        case .yprv: .ypub
+        case .zprv: .zpub
+        case .Ltpv: .Ltub
+        case .Mtpv: .Mtub
+        default: self
         }
     }
 
     public var isPublic: Bool {
         switch self {
-        case .xpub, .ypub, .zpub, .Ltub, .Mtub: return true
-        default: return false
+        case .xpub, .ypub, .zpub, .Ltub, .Mtub: true
+        default: false
         }
     }
 
 }
+
+// MARK: HDExtendedKeyVersion.ExtendedKeyCoinType
 
 extension HDExtendedKeyVersion {
 

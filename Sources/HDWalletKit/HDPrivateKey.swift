@@ -8,9 +8,11 @@
 import Foundation
 
 import Crypto
+import secp256k1
 import WWCryptoKit
 import WWExtensions
-import secp256k1
+
+// MARK: - HDPrivateKey
 
 public class HDPrivateKey: HDKey {
     override public var raw: Data {
@@ -18,7 +20,8 @@ public class HDPrivateKey: HDKey {
     }
 
     var extendedVersion: HDExtendedKeyVersion {
-        HDExtendedKeyVersion(rawValue: version) ?? .xprv // created key successfully validated before creation, so fallback not using
+        HDExtendedKeyVersion(rawValue: version) ??
+            .xprv // created key successfully validated before creation, so fallback not using
     }
 
     override public init(raw: Data, chainCode: Data, version: UInt32, depth: UInt8, fingerprint: UInt32, childIndex: UInt32) {
@@ -36,7 +39,14 @@ public class HDPrivateKey: HDKey {
         try super.init(extendedKey: extendedKey)
     }
 
-    public init(privateKey: Data, chainCode: Data, version: UInt32, depth: UInt8 = 0, fingerprint: UInt32 = 0, childIndex: UInt32 = 0) {
+    public init(
+        privateKey: Data,
+        chainCode: Data,
+        version: UInt32,
+        depth: UInt8 = 0,
+        fingerprint: UInt32 = 0,
+        childIndex: UInt32 = 0
+    ) {
         let zeros = privateKey.count < 33 ? [UInt8](repeating: 0, count: 33 - privateKey.count) : []
 
         super.init(
@@ -57,8 +67,8 @@ public class HDPrivateKey: HDKey {
     }
 }
 
-public extension HDPrivateKey {
-    func derived(at index: UInt32, hardened: Bool, curve: DerivationCurve = .secp256k1) throws -> HDPrivateKey {
+extension HDPrivateKey {
+    public func derived(at index: UInt32, hardened: Bool, curve: DerivationCurve = .secp256k1) throws -> HDPrivateKey {
         let edge: UInt32 = 0x8000_0000
         guard (edge & index) == 0 else {
             throw DerivationError.invalidChildIndex
@@ -98,16 +108,18 @@ public extension HDPrivateKey {
         )
     }
 
-    func publicKey(compressed: Bool = true, curve: DerivationCurve = .secp256k1) -> HDPublicKey {
-        HDPublicKey(raw: Crypto.publicKey(privateKey: raw, curve: curve, compressed: compressed),
-                    chainCode: chainCode,
-                    version: extendedVersion.pubKey.rawValue,
-                    depth: depth,
-                    fingerprint: fingerprint,
-                    childIndex: childIndex)
+    public func publicKey(compressed: Bool = true, curve: DerivationCurve = .secp256k1) -> HDPublicKey {
+        HDPublicKey(
+            raw: Crypto.publicKey(privateKey: raw, curve: curve, compressed: compressed),
+            chainCode: chainCode,
+            version: extendedVersion.pubKey.rawValue,
+            depth: depth,
+            fingerprint: fingerprint,
+            childIndex: childIndex
+        )
     }
 
-    func derivedNonHardenedPublicKeys(at indices: Range<UInt32>) throws -> [HDPublicKey] {
+    public func derivedNonHardenedPublicKeys(at indices: Range<UInt32>) throws -> [HDPublicKey] {
         guard let firstIndex = indices.first, let lastIndex = indices.last else {
             return []
         }
@@ -126,6 +138,8 @@ public extension HDPrivateKey {
         return keys
     }
 }
+
+// MARK: - DerivationError
 
 public enum DerivationError: Error {
     case derivationFailed
