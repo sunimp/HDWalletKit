@@ -109,3 +109,4 @@
 --rules consistentSwitchCaseSpacing
 --rules blankLineAfterSwitchCase
 --rules redundantNilInit
+--rules void
