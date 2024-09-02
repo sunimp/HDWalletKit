@@ -1,8 +1,7 @@
 //
 //  ReadOnlyHDWallet.swift
-//  HDWalletKit
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2022/9/16.
 //
 
 import Foundation
@@ -10,22 +9,22 @@ import Foundation
 import WWCryptoKit
 
 public class ReadOnlyHDWallet {
+    // MARK: Nested Types
 
     enum ParseError: Error {
         case InvalidExtendedPublicKey
         case InvalidChecksum
     }
 
-    private static func dataTo<T>(data: Data, type _: T.Type) -> T {
-        data.withUnsafeBytes { $0.load(as: T.self) }
-    }
+    // MARK: Static Functions
 
     public static func publicKeys(
         hdPublicKey: HDPublicKey,
         indices: Range<UInt32>,
         chain: HDWallet.Chain,
         curve _: DerivationCurve = .secp256k1
-    ) throws -> [HDPublicKey] {
+    ) throws
+        -> [HDPublicKey] {
         guard let firstIndex = indices.first, let lastIndex = indices.last else {
             return []
         }
@@ -34,11 +33,11 @@ public class ReadOnlyHDWallet {
             throw DerivationError.invalidChildIndex
         }
 
-        let derivedHdKey = try hdPublicKey.derived(at: UInt32(chain.rawValue))
+        let derivedHDKey = try hdPublicKey.derived(at: UInt32(chain.rawValue))
 
         var keys = [HDPublicKey]()
         for i in indices {
-            keys.append(try derivedHdKey.derived(at: i))
+            try keys.append(derivedHDKey.derived(at: i))
         }
 
         return keys
@@ -49,7 +48,8 @@ public class ReadOnlyHDWallet {
         indices: Range<UInt32>,
         chain: HDWallet.Chain,
         curve _: DerivationCurve = .secp256k1
-    ) throws -> [HDPublicKey] {
+    ) throws
+        -> [HDPublicKey] {
         let data = Base58.decode(extendedPublicKey)
 
         guard data.count == 82 else {
@@ -80,4 +80,7 @@ public class ReadOnlyHDWallet {
         return try Self.publicKeys(hdPublicKey: hdPublicKey, indices: indices, chain: chain)
     }
 
+    private static func dataTo<T>(data: Data, type _: T.Type) -> T {
+        data.withUnsafeBytes { $0.load(as: T.self) }
+    }
 }

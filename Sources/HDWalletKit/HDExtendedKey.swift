@@ -1,8 +1,7 @@
 //
 //  HDExtendedKey.swift
-//  HDWalletKit
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2022/10/17.
 //
 
 import Foundation
@@ -13,10 +12,23 @@ import WWExtensions
 // MARK: - HDExtendedKey
 
 public enum HDExtendedKey {
-    static let length = 82
-
     case `private`(key: HDPrivateKey)
     case `public`(key: HDPublicKey)
+
+    // MARK: Static Properties
+
+    static let length = 82
+
+    // MARK: Computed Properties
+
+    var hdKey: HDKey {
+        switch self {
+        case let .private(key): key
+        case let .public(key): key
+        }
+    }
+
+    // MARK: Lifecycle
 
     public init(extendedKey: String) throws {
         let data = Base58.decode(extendedKey)
@@ -36,23 +48,14 @@ public enum HDExtendedKey {
         }
 
         if version.isPublic {
-            self = .public(key: try HDPublicKey(extendedKey: data))
+            self = try .public(key: HDPublicKey(extendedKey: data))
         } else {
-            self = .private(key: try HDPrivateKey(extendedKey: data))
+            self = try .private(key: HDPrivateKey(extendedKey: data))
         }
     }
-
-    var hdKey: HDKey {
-        switch self {
-        case .private(let key): key
-        case .public(let key): key
-        }
-    }
-
 }
 
 extension HDExtendedKey {
-
     public var derivedType: DerivedType {
         DerivedType(depth: hdKey.depth)
     }
@@ -74,11 +77,9 @@ extension HDExtendedKey {
     public static func deserialize(data: Data) throws -> HDExtendedKey {
         try HDExtendedKey(data: data)
     }
-
 }
 
 extension HDExtendedKey {
-
     public static func version(extendedKey: Data) throws -> HDExtendedKeyVersion {
         let version = extendedKey.prefix(4).ww.to(type: UInt32.self).bigEndian
         guard let keyType = HDExtendedKeyVersion(rawValue: version) else {
@@ -103,13 +104,11 @@ extension HDExtendedKey {
             throw ParsingError.invalidChecksum
         }
     }
-
 }
 
 // MARK: Equatable, Hashable
 
 extension HDExtendedKey: Equatable, Hashable {
-
     public func hash(into hasher: inout Hasher) {
         hasher.combine(serialized)
     }
@@ -117,16 +116,16 @@ extension HDExtendedKey: Equatable, Hashable {
     public static func == (lhs: HDExtendedKey, rhs: HDExtendedKey) -> Bool {
         lhs.serialized == rhs.serialized
     }
-
 }
 
 extension HDExtendedKey {
-
     /// master key depth == 0, account depth = "m/purpose'/coin_type'/account'" = 3, all others is custom
     public enum DerivedType {
         case bip32
         case master
         case account
+
+        // MARK: Lifecycle
 
         init(depth: UInt8) {
             switch depth {
@@ -144,5 +143,4 @@ extension HDExtendedKey {
         case wrongDerivedType
         case invalidChecksum
     }
-
 }

@@ -1,8 +1,7 @@
 //
 //  HDPrivateKey.swift
-//  HDWalletKit
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2022/1/19.
 //
 
 import Foundation
@@ -15,16 +14,29 @@ import WWExtensions
 // MARK: - HDPrivateKey
 
 public class HDPrivateKey: HDKey {
+    // MARK: Overridden Properties
+
     override public var raw: Data {
         _raw.suffix(32) // first byte is 0x00
     }
+
+    // MARK: Computed Properties
 
     var extendedVersion: HDExtendedKeyVersion {
         HDExtendedKeyVersion(rawValue: version) ??
             .xprv // created key successfully validated before creation, so fallback not using
     }
 
-    override public init(raw: Data, chainCode: Data, version: UInt32, depth: UInt8, fingerprint: UInt32, childIndex: UInt32) {
+    // MARK: Lifecycle
+
+    override public init(
+        raw: Data,
+        chainCode: Data,
+        version: UInt32,
+        depth: UInt8,
+        fingerprint: UInt32,
+        childIndex: UInt32
+    ) {
         super.init(
             raw: raw,
             chainCode: chainCode,
@@ -33,10 +45,6 @@ public class HDPrivateKey: HDKey {
             fingerprint: fingerprint,
             childIndex: childIndex
         )
-    }
-
-    override init(extendedKey: Data) throws {
-        try super.init(extendedKey: extendedKey)
     }
 
     public init(
@@ -65,11 +73,15 @@ public class HDPrivateKey: HDKey {
         let chainCode = hmac[32 ..< 64]
         self.init(privateKey: privateKey, chainCode: chainCode, version: xPrivKey)
     }
+
+    override init(extendedKey: Data) throws {
+        try super.init(extendedKey: extendedKey)
+    }
 }
 
 extension HDPrivateKey {
     public func derived(at index: UInt32, hardened: Bool, curve: DerivationCurve = .secp256k1) throws -> HDPrivateKey {
-        let edge: UInt32 = 0x8000_0000
+        let edge: UInt32 = 0x80000000
         guard (edge & index) == 0 else {
             throw DerivationError.invalidChildIndex
         }
@@ -124,7 +136,7 @@ extension HDPrivateKey {
             return []
         }
 
-        if (0x8000_0000 & firstIndex) != 0, (0x8000_0000 & lastIndex) != 0 {
+        if (0x80000000 & firstIndex) != 0, (0x80000000 & lastIndex) != 0 {
             throw DerivationError.invalidChildIndex
         }
 

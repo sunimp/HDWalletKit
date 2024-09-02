@@ -1,8 +1,7 @@
 //
 //  HDAccountWallet.swift
-//  HDWalletKit
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2022/10/17.
 //
 
 import Foundation
@@ -10,15 +9,28 @@ import Foundation
 import WWCryptoKit
 
 public class HDAccountWallet {
-    private let keychain: HDKeychain
+    // MARK: Nested Types
+
+    public enum Chain: Int {
+        case external
+        case `internal`
+    }
+
+    // MARK: Properties
 
     public var gapLimit: Int
+
+    private let keychain: HDKeychain
+
+    // MARK: Lifecycle
 
     public init(privateKey: HDPrivateKey, curve: DerivationCurve = .secp256k1, gapLimit: Int = 5) {
         self.gapLimit = gapLimit
 
         keychain = HDKeychain(privateKey: privateKey, curve: curve)
     }
+
+    // MARK: Functions
 
     public func privateKey(index: Int, chain: Chain) throws -> HDPrivateKey {
         switch keychain.curve {
@@ -44,10 +56,4 @@ public class HDAccountWallet {
         case .ed25519: throw DerivationError.cantDeriveNonHardened
         }
     }
-
-    public enum Chain: Int {
-        case external
-        case `internal`
-    }
-
 }

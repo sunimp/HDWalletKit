@@ -4,6 +4,10 @@ HD Wallet library that makes possible generating and validating mnemonic phrases
 
 ## Requirements
 
+* Xcode 15.4+
+* Swift 5.10+
+* iOS 14.0+
+
 ## Installation
 
 ### Swift Package Manager
@@ -17,7 +21,7 @@ the `dependencies` value of your `Package.swift`.
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/sunimp/HDWalletKit.Swift.git", .upToNextMajor(from: "1.3.7"))
+    .package(url: "https://github.com/sunimp/HDWalletKit.Swift.git", .upToNextMajor(from: "1.4.0"))
 ]
 ```
 

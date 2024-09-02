@@ -1,8 +1,7 @@
 //
-//  Mnemonic.swift
-//  HDWalletKit
+//  Purpose.swift
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2022/1/19.
 //
 
 import Foundation

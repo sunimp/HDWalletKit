@@ -1,8 +1,7 @@
 //
 //  HDWalletKitTests.swift
-//  HDWalletKitTests
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2022/9/16.
 //
 
 import HDWalletKit
@@ -11,6 +10,13 @@ import XCTest
 // MARK: - HDWalletKitTests
 
 class HDWalletKitTests: XCTestCase {
+    // MARK: Properties
+
+    let NFCEncodedWords =
+        "superbe volume dénuder caribou donjon navire médaille réitérer instinct heureux ventouse barrage"
+            .wordsList
+
+    // MARK: Functions
 
     func testExample() {
         let words = try! Mnemonic.generate()
@@ -29,7 +35,8 @@ class HDWalletKitTests: XCTestCase {
 
         let k = try! hdWallet.publicKeys(account: 0, indices: 0 ..< 1, chain: .external).first!
         let extended = try! hdWallet.privateKey(path: "m/49'/1'/0'").publicKey().extended()
-        let k2 = try! ReadOnlyHDWallet.publicKeys(extendedPublicKey: extended, indices: 0 ..< 5, chain: .external).first!
+        let k2 = try! ReadOnlyHDWallet.publicKeys(extendedPublicKey: extended, indices: 0 ..< 5, chain: .external)
+            .first!
 
         XCTAssertEqual(k.version, k2.version)
         XCTAssertEqual(k.depth, k2.depth)
@@ -46,7 +53,8 @@ class HDWalletKitTests: XCTestCase {
         
         let k = try! hdWallet.publicKeys(account: 0, indices: 0 ..< 1, chain: .external).first!
         let extended = try! hdWallet.privateKey(path: "m/86'/1'/0'").publicKey().extended()
-        let k2 = try! ReadOnlyHDWallet.publicKeys(extendedPublicKey: extended, indices: 0 ..< 5, chain: .external).first!
+        let k2 = try! ReadOnlyHDWallet.publicKeys(extendedPublicKey: extended, indices: 0 ..< 5, chain: .external)
+            .first!
         
         XCTAssertEqual(k.version, k2.version)
         XCTAssertEqual(k.depth, k2.depth)
@@ -84,9 +92,6 @@ class HDWalletKitTests: XCTestCase {
             "38783fa1226a63555ac4c582e8fa5b4a354aad4867510fc61288a91e3cd602743f2940e784e786468fcd64e71d745113fc8301fe64544cfbd022f48df13e0549"
         )
     }
-    
-    let NFCEncodedWords = "superbe volume dénuder caribou donjon navire médaille réitérer instinct heureux ventouse barrage"
-        .wordsList
 
     func testFrenchMnemonicToSeed() {
         let seed = Mnemonic.seed(mnemonic: NFCEncodedWords)!
@@ -113,21 +118,16 @@ class HDWalletKitTests: XCTestCase {
         let englishWords = "叙 玄 告 斗 充 售 岸 陵 床 零 邵 长".wordsList
         XCTAssertEqual(Mnemonic.language(words: englishWords), Mnemonic.Language.simplifiedChinese)
     }
-
 }
 
 extension Data {
-    
     var hex: String {
         reduce("") { $0 + String(format: "%02x", $1) }
     }
-    
 }
 
 extension String {
-    
     var wordsList: [String] {
         split(separator: " ").map(String.init)
     }
-    
 }

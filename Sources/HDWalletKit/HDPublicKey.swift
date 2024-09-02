@@ -1,8 +1,7 @@
 //
 //  HDPublicKey.swift
-//  HDWalletKit
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2022/1/19.
 //
 
 import Foundation
@@ -15,7 +14,6 @@ import WWCryptoKit
 public class HDPublicKey: HDKey { }
 
 extension HDPublicKey {
-
     public func derived(at index: UInt32) throws -> HDPublicKey {
         let edge: UInt32 = 0x80000000
         guard (edge & index) == 0 else {
@@ -43,25 +41,28 @@ extension HDPublicKey {
         var hmacPoint = secp256k1_pubkey()
         if
             hmacPrivateKey.withUnsafeBytes({ hmacPrivateKeyBytes -> Int32 in
-                guard let hmacPrivateKeyPointer = hmacPrivateKeyBytes.bindMemory(to: UInt8.self).baseAddress else { return 0 }
+                guard let hmacPrivateKeyPointer = hmacPrivateKeyBytes.bindMemory(to: UInt8.self).baseAddress
+                else {
+                    return 0
+                }
                 return secp256k1_ec_pubkey_create(context, &hmacPoint, hmacPrivateKeyPointer)
-            }) == 0
-        {
+            }) == 0 {
             throw DerivationError.invalidHmacToPoint
         }
 
         var parentPoint = secp256k1_pubkey()
         if
             raw.withUnsafeBytes({ rawBytes -> Int32 in
-                guard let rawPointer = rawBytes.bindMemory(to: UInt8.self).baseAddress else { return 0 }
+                guard let rawPointer = rawBytes.bindMemory(to: UInt8.self).baseAddress else {
+                    return 0
+                }
                 return secp256k1_ec_pubkey_parse(context, &parentPoint, rawPointer, raw.count)
-            }) == 0
-        {
+            }) == 0 {
             throw DerivationError.invalidRawToPoint
         }
 
         var storage = ContiguousArray<secp256k1_pubkey>()
-        let pointers = UnsafeMutablePointer< UnsafePointer<secp256k1_pubkey>? >.allocate(capacity: 2)
+        let pointers = UnsafeMutablePointer<UnsafePointer<secp256k1_pubkey>?>.allocate(capacity: 2)
         defer {
             pointers.deinitialize(count: 2)
             pointers.deallocate()
@@ -82,8 +83,7 @@ extension HDPublicKey {
         if
             withUnsafeMutablePointer(to: &publicKey, { (pubKeyPtr: UnsafeMutablePointer<secp256k1_pubkey>) -> Int32 in
                 secp256k1_ec_pubkey_combine(context, pubKeyPtr, immutablePointer, 2)
-            }) == 0
-        {
+            }) == 0 {
             throw DerivationError.invalidCombinePoints
         }
 

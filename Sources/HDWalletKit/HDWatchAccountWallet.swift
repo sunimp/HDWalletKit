@@ -1,19 +1,30 @@
 //
 //  HDWatchAccountWallet.swift
-//  HDWalletKit
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2022/10/18.
 //
 
 import Foundation
 
 public class HDWatchAccountWallet {
+    // MARK: Nested Types
+
+    public enum Chain: Int {
+        case external
+        case `internal`
+    }
+
+    // MARK: Properties
+
     private let publicKey: HDPublicKey
+
+    // MARK: Lifecycle
 
     public init(publicKey: HDPublicKey) {
         self.publicKey = publicKey
     }
 
+    // MARK: Functions
 
     public func publicKey(index: Int, chain: Chain) throws -> HDPublicKey {
         try publicKey.derived(at: UInt32(chain.rawValue)).derived(at: UInt32(index))
@@ -28,19 +39,13 @@ public class HDWatchAccountWallet {
             throw DerivationError.invalidChildIndex
         }
 
-        let derivedHdKey = try publicKey.derived(at: UInt32(chain.rawValue))
+        let derivedHDKey = try publicKey.derived(at: UInt32(chain.rawValue))
 
         var keys = [HDPublicKey]()
         for i in indices {
-            keys.append(try derivedHdKey.derived(at: i))
+            try keys.append(derivedHDKey.derived(at: i))
         }
 
         return keys
     }
-
-    public enum Chain: Int {
-        case external
-        case `internal`
-    }
-
 }

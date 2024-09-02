@@ -1,8 +1,7 @@
 //
 //  HDWallet.swift
-//  HDWalletKit
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2022/1/19.
 //
 
 import Foundation
@@ -10,26 +9,52 @@ import Foundation
 import WWCryptoKit
 
 public class HDWallet {
+    // MARK: Nested Types
+
+    public enum Chain: Int {
+        case external
+        case `internal`
+    }
+
+    // MARK: Properties
+
     private let keychain: HDKeychain
 
     private let purpose: UInt32
     private let coinType: UInt32
 
-    public init(seed: Data, coinType: UInt32, xPrivKey: UInt32, purpose: Purpose = .bip44, curve: DerivationCurve = .secp256k1) {
+    // MARK: Computed Properties
+
+    public var masterKey: HDPrivateKey {
+        keychain.privateKey
+    }
+
+    // MARK: Lifecycle
+
+    public init(
+        seed: Data,
+        coinType: UInt32,
+        xPrivKey: UInt32,
+        purpose: Purpose = .bip44,
+        curve: DerivationCurve = .secp256k1
+    ) {
         keychain = HDKeychain(seed: seed, xPrivKey: xPrivKey, curve: curve)
         self.purpose = purpose.rawValue
         self.coinType = coinType
     }
 
-    public init(masterKey: HDPrivateKey, coinType: UInt32, purpose: Purpose = .bip44, curve: DerivationCurve = .secp256k1) {
+    public init(
+        masterKey: HDPrivateKey,
+        coinType: UInt32,
+        purpose: Purpose = .bip44,
+        curve: DerivationCurve = .secp256k1
+    ) {
         keychain = HDKeychain(privateKey: masterKey, curve: curve)
         self.purpose = purpose.rawValue
         self.coinType = coinType
     }
 
-    public var masterKey: HDPrivateKey {
-        keychain.privateKey
-    }
+    // MARK: Functions
 
     public func privateKey(account: Int, index: Int, chain: Chain) throws -> HDPrivateKey {
         try privateKey(path: "m/\(purpose)'/\(coinType)'/\(account)'/\(chain.rawValue)/\(index)")
@@ -53,10 +78,4 @@ public class HDWallet {
             indices: indices
         )
     }
-
-    public enum Chain: Int {
-        case external
-        case `internal`
-    }
-
 }

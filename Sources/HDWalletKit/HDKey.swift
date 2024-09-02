@@ -1,8 +1,7 @@
 //
 //  HDKey.swift
-//  HDWalletKit
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2022/10/20.
 //
 
 import Foundation
@@ -12,15 +11,22 @@ import WWCryptoKit
 // MARK: - HDKey
 
 public class HDKey {
+    // MARK: Properties
+
     public let version: UInt32
     public let depth: UInt8
     public let fingerprint: UInt32
     public let childIndex: UInt32
 
-    let _raw: Data
     public let chainCode: Data
 
+    let _raw: Data
+
+    // MARK: Computed Properties
+
     open var raw: Data { _raw }
+
+    // MARK: Lifecycle
 
     public init(raw: Data, chainCode: Data, version: UInt32, depth: UInt8, fingerprint: UInt32, childIndex: UInt32) {
         self.version = version
@@ -41,11 +47,9 @@ public class HDKey {
         chainCode = extendedKey[13 ..< 45]
         _raw = extendedKey[45 ..< 78]
     }
-
 }
 
 extension HDKey {
-
     func data(version: UInt32? = nil) -> Data {
         var data = Data()
         data += (version ?? self.version).bigEndian.data
@@ -57,11 +61,9 @@ extension HDKey {
         let checksum = Crypto.doubleSha256(data).prefix(4)
         return data + checksum
     }
-
 }
 
 extension HDKey {
-
     public func extended(customVersion: HDExtendedKeyVersion? = nil) -> String {
         let version = customVersion?.rawValue ?? version
         return Base58.encode(data(version: version))
@@ -70,5 +72,4 @@ extension HDKey {
     public var description: String {
         "\(raw.ww.hex) ::: \(chainCode.ww.hex) ::: depth: \(depth) - fingerprint: \(fingerprint) - childIndex: \(childIndex)"
     }
-
 }

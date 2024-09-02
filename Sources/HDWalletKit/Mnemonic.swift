@@ -1,8 +1,7 @@
 //
 //  Mnemonic.swift
-//  HDWalletKit
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2022/1/19.
 //
 
 import Foundation
@@ -10,6 +9,7 @@ import Foundation
 import WWCryptoKit
 
 public enum Mnemonic {
+    // MARK: Nested Types
 
     public enum WordCount: Int, CaseIterable {
         case twelve = 12
@@ -18,6 +18,8 @@ public enum Mnemonic {
         case twentyOne = 21
         case twentyFour = 24
 
+        // MARK: Computed Properties
+
         var bitLength: Int {
             rawValue / 3 * 32
         }
@@ -25,7 +27,6 @@ public enum Mnemonic {
         var checksumLength: Int {
             rawValue / 3
         }
-
     }
 
     public enum Language: CaseIterable {
@@ -51,6 +52,8 @@ public enum Mnemonic {
         case randomBytesError
     }
 
+    // MARK: Static Functions
+
     public static func generate(wordCount: WordCount = .twelve, language: Language = .english) throws -> [String] {
         let byteCount = wordCount.bitLength / 8
         var bytes = Data(count: byteCount)
@@ -59,31 +62,10 @@ public enum Mnemonic {
             SecRandomCopyBytes(kSecRandomDefault, byteCount, $0.baseAddress!.assumingMemoryBound(to: UInt8.self))
         }
 
-        guard status == errSecSuccess else { throw MnemonicError.randomBytesError }
-        return generate(entropy: bytes, language: language)
-    }
-
-    private static func generate(entropy: Data, language: Language = .english) -> [String] {
-        let list = wordList(for: language)
-        var bin = String(entropy.flatMap { ("00000000" + String($0, radix: 2)).suffix(8) })
-
-        let hash = Crypto.sha256(entropy)
-        let bits = entropy.count * 8
-        let cs = bits / 32
-
-        let hashbits = String(hash.flatMap { ("00000000" + String($0, radix: 2)).suffix(8) })
-        let checksum = String(hashbits.prefix(cs))
-        bin += checksum
-
-        var mnemonic = [String]()
-        for i in 0 ..< (bin.count / 11) {
-            let wi = Int(
-                bin[bin.index(bin.startIndex, offsetBy: i * 11) ..< bin.index(bin.startIndex, offsetBy: (i + 1) * 11)],
-                radix: 2
-            )!
-            mnemonic.append(String(list[wi]))
+        guard status == errSecSuccess else {
+            throw MnemonicError.randomBytesError
         }
-        return mnemonic
+        return generate(entropy: bytes, language: language)
     }
 
     public static func seed(
@@ -91,50 +73,17 @@ public enum Mnemonic {
         prefix: String = "mnemonic",
         passphrase: String = "",
         iterations: Int = 2048
-    ) -> Data? {
+    )
+        -> Data? {
         let mnemonic = m.joined(separator: " ").decomposedStringWithCompatibilityMapping
         let salt = (prefix + passphrase).decomposedStringWithCompatibilityMapping.data(using: .utf8)!
-        let seed = Crypto.deriveKey(password: mnemonic, salt: salt, iterations: iterations, keyLength: 64)
-        return seed
+        return Crypto.deriveKey(password: mnemonic, salt: salt, iterations: iterations, keyLength: 64)
     }
 
     public static func seedNonStandard(mnemonic m: [String], passphrase: String = "") -> Data? {
         let mnemonic = m.joined(separator: " ")
         let salt = ("mnemonic" + passphrase).decomposedStringWithCompatibilityMapping.data(using: .utf8)!
-        let seed = Crypto.deriveKeyNonStandard(password: mnemonic, salt: salt, iterations: 2048, keyLength: 64)
-        return seed
-    }
-
-    private static func seedBits(words: [String], list: [String]) throws -> String {
-        var seedBits = ""
-        // swiftformat:disable unusedArguments
-        try words.enumerated().forEach { index, word in
-            guard let index = list.firstIndex(of: word) else {
-                throw ValidationError.invalidWord(index: index)
-            }
-
-            let binaryString = String(index, radix: 2).pad(toSize: 11)
-
-            seedBits.append(contentsOf: binaryString)
-        }
-        // swiftformat:enable unusedArguments
-        return seedBits
-    }
-
-    private static func seedBitsForLanguage(words: [String]) throws -> String {
-        var wrongWordIndex = 0
-
-        for language in (Language.allCases.map { wordList(for: $0).map(String.init) }) {
-            do {
-                return try seedBits(words: words, list: language)
-            } catch {
-                if case ValidationError.invalidWord(let index) = error {
-                    wrongWordIndex = wrongWordIndex < index ? index : wrongWordIndex
-                }
-            }
-        }
-
-        throw ValidationError.invalidWord(index: wrongWordIndex)
+        return Crypto.deriveKeyNonStandard(password: mnemonic, salt: salt, iterations: 2048, keyLength: 64)
     }
 
     public static func validate(words: [String]) throws {
@@ -206,4 +155,58 @@ public enum Mnemonic {
         return nil
     }
 
+    private static func generate(entropy: Data, language: Language = .english) -> [String] {
+        let list = wordList(for: language)
+        var bin = String(entropy.flatMap { ("00000000" + String($0, radix: 2)).suffix(8) })
+
+        let hash = Crypto.sha256(entropy)
+        let bits = entropy.count * 8
+        let cs = bits / 32
+
+        let hashbits = String(hash.flatMap { ("00000000" + String($0, radix: 2)).suffix(8) })
+        let checksum = String(hashbits.prefix(cs))
+        bin += checksum
+
+        var mnemonic = [String]()
+        for i in 0 ..< (bin.count / 11) {
+            let wi = Int(
+                bin[bin.index(bin.startIndex, offsetBy: i * 11) ..< bin.index(bin.startIndex, offsetBy: (i + 1) * 11)],
+                radix: 2
+            )!
+            mnemonic.append(String(list[wi]))
+        }
+        return mnemonic
+    }
+
+    private static func seedBits(words: [String], list: [String]) throws -> String {
+        var seedBits = ""
+        // swiftformat:disable unusedArguments
+        try words.enumerated().forEach { index, word in
+            guard let index = list.firstIndex(of: word) else {
+                throw ValidationError.invalidWord(index: index)
+            }
+
+            let binaryString = String(index, radix: 2).pad(toSize: 11)
+
+            seedBits.append(contentsOf: binaryString)
+        }
+        // swiftformat:enable unusedArguments
+        return seedBits
+    }
+
+    private static func seedBitsForLanguage(words: [String]) throws -> String {
+        var wrongWordIndex = 0
+
+        for language in (Language.allCases.map { wordList(for: $0).map(String.init) }) {
+            do {
+                return try seedBits(words: words, list: language)
+            } catch {
+                if case let ValidationError.invalidWord(index) = error {
+                    wrongWordIndex = wrongWordIndex < index ? index : wrongWordIndex
+                }
+            }
+        }
+
+        throw ValidationError.invalidWord(index: wrongWordIndex)
+    }
 }

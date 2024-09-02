@@ -1,8 +1,7 @@
 //
 //  HDKeychain.swift
-//  HDWalletKit
 //
-//  Created by Sun on 2024/8/21.
+//  Created by Sun on 2022/1/19.
 //
 
 import Foundation
@@ -11,8 +10,13 @@ import WWCryptoKit
 import WWExtensions
 
 public final class HDKeychain {
-    let privateKey: HDPrivateKey
+    // MARK: Properties
+
     public let curve: DerivationCurve
+
+    let privateKey: HDPrivateKey
+
+    // MARK: Lifecycle
 
     public init(privateKey: HDPrivateKey, curve: DerivationCurve = .secp256k1) {
         self.privateKey = privateKey
@@ -22,6 +26,8 @@ public final class HDKeychain {
     public convenience init(seed: Data, xPrivKey: UInt32, curve: DerivationCurve) {
         self.init(privateKey: HDPrivateKey(seed: seed, xPrivKey: xPrivKey, salt: curve.bip32SeedSalt), curve: curve)
     }
+
+    // MARK: Functions
 
     /// Parses the BIP32 path and derives the chain of keychains accordingly.
     /// Path syntax: (m?/)?([0-9]+'?(/[0-9]+'?)*)?
@@ -76,5 +82,4 @@ public final class HDKeychain {
 
         return try key.derivedNonHardenedPublicKeys(at: indices)
     }
-
 }

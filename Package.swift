@@ -14,9 +14,9 @@ let package = Package(
             targets: ["HDWalletKit"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-crypto.git", "1.0.0" ..< "3.0.0"),
-        .package(url: "https://github.com/sunimp/WWCryptoKit.Swift.git", .upToNextMajor(from: "1.3.7")),
-        .package(url: "https://github.com/nicklockwood/SwiftFormat.git", from: "0.54.0"),
+        .package(url: "https://github.com/apple/swift-crypto.git", from: "3.6.1"),
+        .package(url: "https://github.com/sunimp/WWCryptoKit.Swift.git", .upToNextMajor(from: "1.4.0")),
+        .package(url: "https://github.com/nicklockwood/SwiftFormat.git", from: "0.54.3"),
     ],
     targets: [
         .target(
