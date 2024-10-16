@@ -1,5 +1,6 @@
 //
 //  HDPublicKey.swift
+//  HDWalletKit
 //
 //  Created by Sun on 2022/1/19.
 //
@@ -7,7 +8,7 @@
 import Foundation
 
 import secp256k1
-import WWCryptoKit
+import SWCryptoKit
 
 // MARK: - HDPublicKey
 
@@ -33,7 +34,7 @@ extension HDPublicKey {
         let derivedChainCode = digest[32 ..< 64]
 
         let hash = Crypto.ripeMd160Sha256(raw)
-        let fingerprint = hash[0 ..< 4].ww.to(type: UInt32.self)
+        let fingerprint = hash[0 ..< 4].sw.to(type: UInt32.self)
 
         let context = secp256k1_context_create(UInt32(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY))!
 

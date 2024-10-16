@@ -1,13 +1,14 @@
 //
 //  HDKeychain.swift
+//  HDWalletKit
 //
 //  Created by Sun on 2022/1/19.
 //
 
 import Foundation
 
-import WWCryptoKit
-import WWExtensions
+import SWCryptoKit
+import SWExtensions
 
 public final class HDKeychain {
     // MARK: Properties

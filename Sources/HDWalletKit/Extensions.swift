@@ -1,12 +1,13 @@
 //
 //  Extensions.swift
+//  HDWalletKit
 //
 //  Created by Sun on 2022/1/19.
 //
 
 import Foundation
 
-import WWCryptoKit
+import SWCryptoKit
 
 extension String {
     func pad(toSize: Int) -> String {

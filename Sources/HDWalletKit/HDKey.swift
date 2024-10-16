@@ -1,12 +1,13 @@
 //
 //  HDKey.swift
+//  HDWalletKit
 //
 //  Created by Sun on 2022/10/20.
 //
 
 import Foundation
 
-import WWCryptoKit
+import SWCryptoKit
 
 // MARK: - HDKey
 
@@ -39,11 +40,11 @@ public class HDKey {
 
     public init(extendedKey: Data) throws {
         try HDExtendedKey.isValid(extendedKey)
-        version = extendedKey.prefix(4).ww.to(type: UInt32.self).bigEndian
+        version = extendedKey.prefix(4).sw.to(type: UInt32.self).bigEndian
 
         depth = extendedKey[4]
-        fingerprint = extendedKey[5 ..< 9].ww.to(type: UInt32.self).bigEndian
-        childIndex = extendedKey[9 ..< 12].ww.to(type: UInt32.self).bigEndian
+        fingerprint = extendedKey[5 ..< 9].sw.to(type: UInt32.self).bigEndian
+        childIndex = extendedKey[9 ..< 12].sw.to(type: UInt32.self).bigEndian
         chainCode = extendedKey[13 ..< 45]
         _raw = extendedKey[45 ..< 78]
     }
@@ -70,6 +71,6 @@ extension HDKey {
     }
 
     public var description: String {
-        "\(raw.ww.hex) ::: \(chainCode.ww.hex) ::: depth: \(depth) - fingerprint: \(fingerprint) - childIndex: \(childIndex)"
+        "\(raw.sw.hex) ::: \(chainCode.sw.hex) ::: depth: \(depth) - fingerprint: \(fingerprint) - childIndex: \(childIndex)"
     }
 }

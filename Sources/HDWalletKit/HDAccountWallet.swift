@@ -1,12 +1,13 @@
 //
 //  HDAccountWallet.swift
+//  HDWalletKit
 //
 //  Created by Sun on 2022/10/17.
 //
 
 import Foundation
 
-import WWCryptoKit
+import SWCryptoKit
 
 public class HDAccountWallet {
     // MARK: Nested Types

@@ -1,13 +1,14 @@
 //
 //  HDExtendedKey.swift
+//  HDWalletKit
 //
 //  Created by Sun on 2022/10/17.
 //
 
 import Foundation
 
-import WWCryptoKit
-import WWExtensions
+import SWCryptoKit
+import SWExtensions
 
 // MARK: - HDExtendedKey
 
@@ -81,7 +82,7 @@ extension HDExtendedKey {
 
 extension HDExtendedKey {
     public static func version(extendedKey: Data) throws -> HDExtendedKeyVersion {
-        let version = extendedKey.prefix(4).ww.to(type: UInt32.self).bigEndian
+        let version = extendedKey.prefix(4).sw.to(type: UInt32.self).bigEndian
         guard let keyType = HDExtendedKeyVersion(rawValue: version) else {
             throw ParsingError.wrongVersion
         }

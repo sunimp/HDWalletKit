@@ -1,12 +1,13 @@
 //
 //  HDExtendedKeyVersion.swift
+//  HDWalletKit
 //
 //  Created by Sun on 2022/10/17.
 //
 
 import Foundation
 
-import WWExtensions
+import SWExtensions
 
 // MARK: - HDExtendedKeyVersion
 

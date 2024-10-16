@@ -1,5 +1,6 @@
 //
 //  HDPrivateKey.swift
+//  HDWalletKit
 //
 //  Created by Sun on 2022/1/19.
 //
@@ -8,8 +9,8 @@ import Foundation
 
 import Crypto
 import secp256k1
-import WWCryptoKit
-import WWExtensions
+import SWCryptoKit
+import SWExtensions
 
 // MARK: - HDPrivateKey
 
@@ -108,7 +109,7 @@ extension HDPrivateKey {
         let derivedChainCode = digest[32 ..< 64]
 
         let hash = Crypto.ripeMd160Sha256(publicKey)
-        let fingerprint: UInt32 = hash[0 ..< 4].ww.to(type: UInt32.self)
+        let fingerprint: UInt32 = hash[0 ..< 4].sw.to(type: UInt32.self)
 
         return HDPrivateKey(
             privateKey: derivedPrivateKey,

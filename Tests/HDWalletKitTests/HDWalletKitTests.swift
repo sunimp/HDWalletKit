@@ -1,5 +1,6 @@
 //
 //  HDWalletKitTests.swift
+//  HDWalletKitTests
 //
 //  Created by Sun on 2022/9/16.
 //
@@ -115,8 +116,8 @@ class HDWalletKitTests: XCTestCase {
     }
     
     func testLanguageChinese() {
-        let englishWords = "叙 玄 告 斗 充 售 岸 陵 床 零 邵 长".wordsList
-        XCTAssertEqual(Mnemonic.language(words: englishWords), Mnemonic.Language.simplifiedChinese)
+        let chineseWords = "叙 玄 告 斗 充 售 岸 陵 床 零 邵 长".wordsList
+        XCTAssertEqual(Mnemonic.language(words: chineseWords), Mnemonic.Language.simplifiedChinese)
     }
 }
 

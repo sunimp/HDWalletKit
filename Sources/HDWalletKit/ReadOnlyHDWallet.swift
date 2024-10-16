@@ -1,12 +1,13 @@
 //
 //  ReadOnlyHDWallet.swift
+//  HDWalletKit
 //
 //  Created by Sun on 2022/9/16.
 //
 
 import Foundation
 
-import WWCryptoKit
+import SWCryptoKit
 
 public class ReadOnlyHDWallet {
     // MARK: Nested Types
