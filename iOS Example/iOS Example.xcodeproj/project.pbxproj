@@ -3,13 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		3A39D09C2757536E0022CB8B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A39D09A2757536E0022CB8B /* ViewController.swift */; };
 		3A39D09D2757536E0022CB8B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A39D09B2757536E0022CB8B /* AppDelegate.swift */; };
-		6BC11A6A28F3EC860001FDF1 /* HdWalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6BC11A6928F3EC860001FDF1 /* HdWalletKit */; };
+		A4ED50B02CBF668F002F841B /* HDWalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = A4ED50AF2CBF668F002F841B /* HDWalletKit */; };
+		A4ED50B62CBF67A9002F841B /* HDWalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = A4ED50B52CBF67A9002F841B /* HDWalletKit */; };
 		D94502FD261F98A500F6BF2E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D94502FC261F98A500F6BF2E /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -27,7 +28,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6BC11A6A28F3EC860001FDF1 /* HdWalletKit in Frameworks */,
+				A4ED50B62CBF67A9002F841B /* HDWalletKit in Frameworks */,
+				A4ED50B02CBF668F002F841B /* HDWalletKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,7 +89,8 @@
 			);
 			name = "iOS Example";
 			packageProductDependencies = (
-				6BC11A6928F3EC860001FDF1 /* HdWalletKit */,
+				A4ED50AF2CBF668F002F841B /* HDWalletKit */,
+				A4ED50B52CBF67A9002F841B /* HDWalletKit */,
 			);
 			productName = "iOS Example";
 			productReference = D94502F5261F98A400F6BF2E /* HDWalletKit-Example.app */;
@@ -119,6 +122,7 @@
 			);
 			mainGroup = D94502EC261F98A400F6BF2E;
 			packageReferences = (
+				A4ED50B42CBF67A9002F841B /* XCLocalSwiftPackageReference "../../HDWalletKit.Swift" */,
 			);
 			productRefGroup = D94502F6261F98A400F6BF2E /* Products */;
 			projectDirPath = "";
@@ -339,10 +343,21 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		A4ED50B42CBF67A9002F841B /* XCLocalSwiftPackageReference "../../HDWalletKit.Swift" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../HDWalletKit.Swift;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
-		6BC11A6928F3EC860001FDF1 /* HdWalletKit */ = {
+		A4ED50AF2CBF668F002F841B /* HDWalletKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = HdWalletKit;
+			productName = HDWalletKit;
+		};
+		A4ED50B52CBF67A9002F841B /* HDWalletKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HDWalletKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
